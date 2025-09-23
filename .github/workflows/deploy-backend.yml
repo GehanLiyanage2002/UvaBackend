@@ -1,0 +1,30 @@
+name: Deploy PHP Backend to Azure Web App
+
+on:
+  push:
+    branches:
+      - main  # change if needed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repo
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. (Optional) Install PHP dependencies if using Composer
+      - name: Install Composer dependencies
+        run: |
+          if [ -f "composer.json" ]; then
+            composer install --no-dev --optimize-autoloader
+          fi
+
+      # 3. Deploy PHP backend to Azure
+      - name: Deploy to Azure
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: my-backend-app  # Azure Web App name
+          slot-name: production
+          package: .
